@@ -1,4 +1,5 @@
 import java.util.LongSummaryStatistics
+import kotlin.concurrent.timerTask
 import kotlin.math.min
 import kotlin.math.pow
 import kotlin.time.measureTime
@@ -32,8 +33,8 @@ fun main() {
     fun seedsPart1(input: List<String>) = input.first().split(": ")[1].split(" ").map { it.toLong() }
     fun part1(input: List<String>): Long {
         val seeds = seedsPart1(input)
-
         val steps = steps(input)
+
         return  seeds.minOf { seed ->
             steps.fold(seed) { acc, step ->
                 step.find(acc)
@@ -41,14 +42,11 @@ fun main() {
         }
     }
 
-
-
     fun part2(input: List<String>): Long {
         val seeds = input.first().substringAfter(" ").split(" ").map { it.toLong() }.chunked(2).map { it.first()..<it.first() + it.last() }
         val steps = steps(input)
 
         val stepsReversed = steps.reversed()
-
         return generateSequence(0L) { it + 1 }.filter { location ->
             val seed = stepsReversed.fold(location){ acc, step -> step.findReverse(acc) }
             seeds.any { seed in it }
@@ -62,14 +60,11 @@ fun main() {
 
     val input = readInput("Day05")
 
-    val timeTaken = measureTime {
+    timetrack {
         part1(input).println()
     }
-    println(timeTaken)
-    val timeTaken2 = measureTime {
+
+    timetrack {
         part2(input).println()
     }
-    println(timeTaken2)
-    
-
 }
