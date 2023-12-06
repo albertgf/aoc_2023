@@ -5,7 +5,15 @@ import kotlin.math.pow
 import kotlin.time.measureTime
 
 fun main() {
-    
+    fun calculatePositiveOutcomes(time: Long, minDistance: Long): Long {
+        var distance = 0L
+        var speed = 0L
+        while (minDistance >= distance) {
+            speed++
+            distance = (time - speed) * speed
+        }
+        return (time+1) - ((speed) * 2)
+    }
     
     fun part1(input: List<String>): Long {
         val times = input.first().split(" ")
@@ -14,9 +22,7 @@ fun main() {
             .filterNot { it.isEmpty() }.drop(1).map { it.toLong() }
         
         return times.mapIndexed { index, time ->
-            (0..time).toList().mapIndexed { speed, holded ->
-                (time - speed) * speed
-            }.count { it > distances[index] }.toLong()
+            calculatePositiveOutcomes(time, distances[index])
         }.reduce { acc, distance -> acc*distance }
     }
 
@@ -26,9 +32,7 @@ fun main() {
         val distance = input[1].split(" ")
             .filterNot { it.isEmpty() }.drop(1).reduce { acc, s -> acc+s }.toLong()
 
-        return (0..time).toList().mapIndexed { speed, holded ->
-                (time - speed) * speed
-            }.count { it > distance }.toLong()
+        return calculatePositiveOutcomes(time, distance)
     }
 
     // test if implementation meets criteria from the description, like:
